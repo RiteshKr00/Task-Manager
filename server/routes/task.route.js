@@ -74,14 +74,26 @@ module.exports = function (app) {
       res.status(500).send(`Something Went Wrong: ${error}`);
     }
   });
+  app.get("/fetch", async (req, res) => {
+    try {
+      const { listtype } = req.body;
+      console.log(listtype);
+      const list = await Task.find({ list:listtype });
+      res.status(200).send(list);
+    } catch (error) {
+      res.status(500).send(`Something Went Wrong: ${error}`);
+    }
+  });
   // app.post("/create",async(req,res)=>{try {
 
   // } catch (error) {
+  // res.status(500).send(`Something Went Wrong: ${error}`);
 
   // }})
   // app.post("/create",async(req,res)=>{try {
 
   // } catch (error) {
+  //      res.status(500).send(`Something Went Wrong: ${error}`);
 
   // }})
 };
