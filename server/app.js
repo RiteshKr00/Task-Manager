@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
+const archiveUpdate = require("./utils/archiveUpdate");
 require("dotenv").config();
 
 var corsOptions = {
@@ -25,7 +26,7 @@ mongoose.connection.on("error", () => {
 app.use(express.json());
 //routes
 require("./routes/task.route")(app);
-
+archiveUpdate.start();
 
 app.listen(process.env.PORT || 8080, () => {
   console.log("Server is runnng at port", process.env.PORT);

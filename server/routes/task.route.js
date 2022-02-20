@@ -14,6 +14,71 @@ module.exports = function (app) {
       res.status(500).send(`Something Went Wrong: ${error}`);
     }
   });
+  app.put("/createsubtask", async (req, res) => {
+    try {
+      const { taskid, info } = req.body;
+      const newsubtask = { info: info, done: false };
+      console.log(info);
+      const subtask = await Task.findByIdAndUpdate(
+        taskid,
+        {
+          $push: { subtask: newsubtask },
+        },
+        { new: true }
+      );
+      res.status(200).send(subtask);
+    } catch (error) {
+      res.status(500).send(`Something Went Wrong: ${error}`);
+    }
+  });
+  app.put("/complete", async (req, res) => {
+    try {
+      const { taskid } = req.body;
+      const subtask = await Task.findOneAndUpdate(
+        { taskid },
+        {
+          // prettier-ignore
+          $set: {
+            "completed": true,
+            "list": "Completed",
+            "subtask.$[elem].done": true,
+          },
+        },
+        {
+          arrayFilters: [{ "elem.done": false }],
+        }
+      );
+      res.status(200).send(subtask);
+    } catch (error) {
+      res.status(500).send(`Something Went Wrong: ${error}`);
+    }
+  });
+  //change subtask status to done/undone
+  app.put("/change", async (req, res) => {
+    try {
+      const { taskid, subtaskid, status } = req.body;
+      const subtask = await Task.findOneAndUpdate(
+        { taskid },
+        {
+          // prettier-ignore
+          $set: {
+          "subtask.$[elem].done": status,
+        },
+        },
+        {
+          arrayFilters: [{ "elem._id": subtaskid }],
+        }
+      );
+      res.status(200).send(subtask);
+    } catch (error) {
+      res.status(500).send(`Something Went Wrong: ${error}`);
+    }
+  });
+  // app.post("/create",async(req,res)=>{try {
+
+  // } catch (error) {
+
+  // }})
   // app.post("/create",async(req,res)=>{try {
 
   // } catch (error) {
