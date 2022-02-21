@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import Toast from "../component/Toast";
+import { useNavigate } from "react-router-dom";
 const axios = require("axios");
 
 const InprogressTask = () => {
   const [refresh, setRefresh] = useState();
   const [data, setData] = useState([]);
   const [subtask, setSubTask] = useState([]);
+  let navigate = useNavigate();
 
   const FetchList = async () => {
     try {
@@ -27,6 +30,7 @@ const InprogressTask = () => {
       console.log(response);
       setRefresh(response.data);
       console.log(response.data);
+      Toast("SubTask Added", 1);
     } catch (err) {
       console.log(err);
       console.log(err.response);
@@ -44,6 +48,7 @@ const InprogressTask = () => {
       console.log(response);
       setRefresh(response.data);
       console.log(response.data);
+      Toast("SubTask status changed", 1);
     } catch (err) {
       console.log(err);
       console.log(err.response);
@@ -59,6 +64,8 @@ const InprogressTask = () => {
       console.log(response);
       setRefresh(response.data);
       console.log(response.data);
+      navigate("/completed");
+      Toast("Task Completed", 1);
     } catch (err) {
       console.log(err);
       console.log(err.response);
@@ -100,7 +107,7 @@ const InprogressTask = () => {
                         </div>
                         <div className="  text-sm text-gray-400 ">
                           {Intl.DateTimeFormat("en-US", {
-                            day:"2-digit",
+                            day: "2-digit",
                             year: "numeric",
                             month: "long",
                             weekday: "long",

@@ -7,12 +7,15 @@ module.exports = function (app) {
   app.post("/create", async (req, res) => {
     try {
       const { title, description, date } = req.body;
+      if (!title) {
+        return res.send("Please Add the title");
+      }
       console.log(typeof date);
       console.log(date);
       const task = await new Task({
         title,
         description,
-        dueDate: date, 
+        dueDate: date,
       }).save();
       res.status(200).send(task);
     } catch (error) {

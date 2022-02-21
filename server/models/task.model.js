@@ -5,7 +5,7 @@ const taskSchema = new mongoose.Schema(
     title: String,
     description: String,
     dueDate: { type: Date,
-      //  default: Date.now() + 3600000 * 24
+       default: Date.now() + 3600000 * 24
        },
     subtask: [
       {
