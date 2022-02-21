@@ -4,7 +4,9 @@ const taskSchema = new mongoose.Schema(
   {
     title: String,
     description: String,
-    dueDate: { type: Date, default: Date.now() + 3600000 * 24 },
+    dueDate: { type: Date,
+      //  default: Date.now() + 3600000 * 24
+       },
     subtask: [
       {
         info: String,
@@ -21,7 +23,7 @@ const taskSchema = new mongoose.Schema(
     list: {
       type: String,
       default: "Inprogress",
-      enums: ["Inprogress", "completed", "archived"],
+      enums: ["Inprogress", "Completed"],
     },
   },
   { timestamps: true }

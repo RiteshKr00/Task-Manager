@@ -2,14 +2,14 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-const archiveUpdate = require("./utils/archiveUpdate");
 require("dotenv").config();
+const path = require("path")
 
 var corsOptions = {
   origin: "*", // restrict calls to those this address
 };
 // NEW - replace custom middleware with the cors() middleware
-app.use(cors(corsOptions));
+app.use(cors());
 
 mongoose.connect(process.env.MONGOURI, {
   useNewUrlParser: true,
@@ -24,9 +24,14 @@ mongoose.connection.on("error", () => {
   process.exit(1);
 });
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "client", "build")));
+
 //routes
 require("./routes/task.route")(app);
-archiveUpdate.start();
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 app.listen(process.env.PORT || 8080, () => {
   console.log("Server is runnng at port", process.env.PORT);

@@ -6,9 +6,14 @@ module.exports = function (app) {
   });
   app.post("/create", async (req, res) => {
     try {
-      const { title, description } = req.body;
-      console.log(title);
-      const task = await new Task({ title, description }).save();
+      const { title, description, date } = req.body;
+      console.log(typeof date);
+      console.log(date);
+      const task = await new Task({
+        title,
+        description,
+        dueDate: date, 
+      }).save();
       res.status(200).send(task);
     } catch (error) {
       res.status(500).send(`Something Went Wrong: ${error}`);
@@ -35,7 +40,7 @@ module.exports = function (app) {
     try {
       const { taskid } = req.body;
       const subtask = await Task.findOneAndUpdate(
-        { taskid },
+        { _id: taskid },
         {
           // prettier-ignore
           $set: {
@@ -57,28 +62,49 @@ module.exports = function (app) {
   app.put("/change", async (req, res) => {
     try {
       const { taskid, subtaskid, status } = req.body;
+      console.log(taskid, subtaskid, status);
+
       const subtask = await Task.findOneAndUpdate(
-        { taskid },
+        { _id: taskid },
         {
           // prettier-ignore
           $set: {
-          "subtask.$[elem].done": status,
+          "subtask.$[elem].done": !status,
         },
         },
         {
           arrayFilters: [{ "elem._id": subtaskid }],
         }
       );
+      console.log(subtask);
       res.status(200).send(subtask);
     } catch (error) {
       res.status(500).send(`Something Went Wrong: ${error}`);
     }
   });
-  app.get("/fetch", async (req, res) => {
+  app.get("/fetch_in", async (req, res) => {
     try {
-      const { listtype } = req.body;
-      console.log(listtype);
-      const list = await Task.find({ list:listtype });
+      const list = await Task.find({ list: "Inprogress" }).sort("dueDate");
+      res.status(200).send(list);
+    } catch (error) {
+      res.status(500).send(`Something Went Wrong: ${error}`);
+    }
+  });
+  app.get("/fetch_comp", async (req, res) => {
+    try {
+      const list = await Task.find({ list: "Completed" })
+        .sort("-updatedAt")
+        .limit(10); //only latest 10
+      res.status(200).send(list);
+    } catch (error) {
+      res.status(500).send(`Something Went Wrong: ${error}`);
+    }
+  });
+  app.get("/fetch_archive", async (req, res) => {
+    try {
+      const list = await Task.find({ list: "Completed" })
+        .sort("-updatedAt")
+        .skip(10); //skip first 10 results
       res.status(200).send(list);
     } catch (error) {
       res.status(500).send(`Something Went Wrong: ${error}`);
