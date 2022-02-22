@@ -1,3 +1,4 @@
+const { findByIdAndDelete } = require("../models/task.model");
 const Task = require("../models/task.model");
 
 module.exports = function (app) {
@@ -8,7 +9,7 @@ module.exports = function (app) {
     try {
       const { title, description, date } = req.body;
       if (!title) {
-        return res.send("Please Add the title");
+        return res.status(400).send("Please Add the title");
       }
       console.log(typeof date);
       console.log(date);
@@ -25,6 +26,9 @@ module.exports = function (app) {
   app.put("/createsubtask", async (req, res) => {
     try {
       const { taskid, info } = req.body;
+      if (!taskid || !info) {
+        return res.status(400).send("Please Add the Subtask Info");
+      }
       const newsubtask = { info: info, done: false };
       console.log(info);
       const subtask = await Task.findByIdAndUpdate(
@@ -113,12 +117,16 @@ module.exports = function (app) {
       res.status(500).send(`Something Went Wrong: ${error}`);
     }
   });
-  // app.post("/create",async(req,res)=>{try {
-
-  // } catch (error) {
-  // res.status(500).send(`Something Went Wrong: ${error}`);
-
-  // }})
+  app.delete("/delete", async (req, res) => {
+    try {
+      const { taskid } = req.body;
+      console.log(taskid);
+      const deleted = await Task.findByIdAndDelete(taskid);
+      res.status(200).send(deleted);
+    } catch (error) {
+      res.status(500).send(`Something Went Wrong: ${error}`);
+    }
+  });
   // app.post("/create",async(req,res)=>{try {
 
   // } catch (error) {

@@ -9,7 +9,7 @@ import Home from "./Components/pages/Home";
 
 function App() {
   return (
-    <div className="h-screen  py-2  bg-gray-900">
+    <div className="h-screen  py-2   bg-gray-900">
       <NavBar />
       <h1 className="pt-5 text-green-500 bold text-xl text-center">
         Task Manager App

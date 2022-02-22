@@ -29,6 +29,7 @@ const NewTask = () => {
     } catch (err) {
       console.log(err);
       console.log(err.response);
+      Toast(err.response.data,2)
     }
   };
   return (
@@ -95,7 +96,7 @@ const NewTask = () => {
                 </label>
                 <DatePicker
                   id="due"
-                  placeholderText="Select Due Date"
+                  placeholderText="Select Due Date (Default:24 hrs)"
                   showTimeSelect
                   minDate={new Date()}
                   maxDate={addMonths(new Date(), 5)}
