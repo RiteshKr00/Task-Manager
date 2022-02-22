@@ -60,7 +60,14 @@ const CompletedTask = () => {
                         {todo.title}
                       </div>
                       <div className="  text-sm text-gray-400 ">
-                        due 25 dec 2021
+                        {Intl.DateTimeFormat("en-US", {
+                          day: "2-digit",
+                          year: "numeric",
+                          month: "long",
+                          weekday: "long",
+                          hour: "numeric",
+                          minute: "numeric",
+                        }).format(new Date(todo.dueDate))}
                       </div>
                     </div>
                     <p className="mt-2 text-gray-300 dark:text-gray-300">
